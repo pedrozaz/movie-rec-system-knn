@@ -6,5 +6,8 @@
   "recommendation_for": "Recommendations for user",
   "movie_title": "Movie Title",
   "predicted_rating": "Predicted Rating",
-  "error_user_not_found": "User ID {user_id} not found in database."
+  "error_user_not_found": "User ID {user_id} not found in database.",
+  "creating_matrix": "Building matrix user-item...",
+  "matrix_info": "Matrix created with {users} users and {movies} movies.",
+  "sparsity_info": "Matrix sparsity: {sparsity:.2f}%"
 }
