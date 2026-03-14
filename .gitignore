@@ -6,3 +6,4 @@ data/raw/*
 .env
 *.pyc
 .DS_Store
+.idea
