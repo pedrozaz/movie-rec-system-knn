@@ -1,37 +1,45 @@
+import numpy as np
+
 from src.utils.translator import Translator
 from src.preprocessing.data_loader import load_movielens_100k
 from src.preprocessing.matrix_builder import create_user_item_matrix
 from src.models.knn_recommender import KNNRecommender
+from sklearn.model_selection import train_test_split
+from src.models.evaluator import Evaluator
 
 
 def main():
     tr = Translator(lang='pt')
 
-    try:
-        df_ratings, df_items = load_movielens_100k()
-        sparse_mat, matrix_df, user_means = create_user_item_matrix(df_ratings)
+    df_ratings, df_items = load_movielens_100k()
 
-        recommender = KNNRecommender(n_neighbors=20)
-        recommender.fit(sparse_mat)
+    train_df, test_df = train_test_split(df_ratings, test_size=0.2, random_state=42)
 
-        user_id = 1
-        user_idx = user_id - 1
-        n_recs = 5
+    sparse_mat, matrix_df, user_means = create_user_item_matrix(train_df)
 
-        print(tr.get('generating_recs', user_id=user_id))
+    recommender = KNNRecommender(n_neighbors=20)
+    recommender.fit(sparse_mat)
 
-        tops_recs = recommender.recommend(user_idx, matrix_df, user_means, n_recs=n_recs)
+    user_id = test_df['user_id'].iloc[0]
+    user_idx = user_id - 1
 
-        print(tr.get('top_n_title', n=n_recs))
+    user_test_data = test_df[test_df['user_id'] == user_id]
+    actual_ids = user_test_data['movie_id'].values
+    actual_ratings = user_test_data['rating'].values
 
-        for rank, (movie_id, rating) in enumerate(tops_recs.items(), 1):
-            title = df_items[df_items['movie_id'] == movie_id]['title'].values[0]
-            print(tr.get('movie_display', rank=rank, title=title, rating=rating))
+    predictions = recommender.recommend(user_idx, matrix_df, user_means, n_recs=1682)
 
-    except Exception as e:
-        print(f"Error: {e}")
-        import traceback
-        traceback.print_exc()
+    y_true = []
+    y_pred = []
+
+    for m_id, r_real in zip(actual_ids, actual_ratings):
+        if m_id in predictions.index:
+            y_true.append(r_real)
+            y_pred.append(predictions[m_id])
+
+        if y_true:
+            rmse_val = Evaluator.rmse(np.array(y_true), np.array(y_pred))
+            print(f"\nRMSE for User {user_id}: {rmse_val:.4f}")
 
 if __name__ == "__main__":
     main()
