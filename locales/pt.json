@@ -11,5 +11,8 @@
   "sparsity_info": "Esparsidade da matriz: {sparsity:.2f}%",
   "model_training": "Treinando modelo KNN (métrica: {metric})...",
   "finding_neighbors": "Buscando vizinhos para o usuário {user_id}...",
-  "neighbors_found": "Encontrados {count} vizinhos similares."
+  "neighbors_found": "Encontrados {count} vizinhos similares.",
+  "generating_recs": "Gerando recomendações para o usuário {user_id}...",
+  "top_n_title": "\n--- Top {n} Recomendações ---",
+  "movie_display": "{rank}. {title} | Nota Predita: {rating:.2f}"
 }
