@@ -11,5 +11,8 @@
   "sparsity_info": "Matrix sparsity: {sparsity:.2f}%",
   "model_training": "Training KNN model (metric: {metric})...",
   "finding_neighbors": "Finding neighbors for user {user_id}...",
-  "neighbors_found": "Found {count} similar neighbors."
+  "neighbors_found": "Found {count} similar neighbors.",
+  "generating_recs": "Generating recommendations for user {user_id}...",
+  "top_n_title": "\n--- Top {n} Recommendations ---",
+  "movie_display": "{rank}. {title} | Predicted Rating: {rating:.2f}"
 }
