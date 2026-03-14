@@ -1,18 +1,22 @@
-import pandas as pd
-import numpy as np
-from scipy.sparse import csr_matrix
 from typing import Tuple
 
-def create_user_item_matrix(df: pd.DataFrame) -> Tuple[csr_matrix, pd.DataFrame, pd.Series]:
-    """
-    Transforms DataFrame into normalized sparse matrix.
-    """
+import pandas as pd
+from scipy.sparse import csr_matrix
+
+
+def create_user_item_matrix(df: pd.DataFrame, is_item_based: bool = False) -> Tuple[csr_matrix, pd.DataFrame, pd.Series]:
     matrix_df = df.pivot_table(index='user_id', columns='movie_id', values='rating')
-    user_means = matrix_df.mean(axis=1)
-    matrix_centered = matrix_df.sub(user_means, axis=0).fillna(0)
+
+    if is_item_based:
+        matrix_df = matrix_df.T
+        means = matrix_df.mean(axis=1)
+    else:
+        means = matrix_df.mean(axis=1)
+
+    matrix_centered = matrix_df.sub(means, axis=0).fillna(0)
     sparse_matrix = csr_matrix(matrix_centered.values)
 
-    return sparse_matrix, matrix_centered, user_means
+    return sparse_matrix, matrix_centered, means
 
 def calculate_sparsity(df: pd.DataFrame) -> float:
     """
