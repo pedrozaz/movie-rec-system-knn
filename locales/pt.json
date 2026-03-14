@@ -2,9 +2,14 @@
   "loading_data": "Carregando dataset...",
   "data_info": "Dataset carregando com {rows} avaliações.",
   "preprocessing": "Aplicando mean-centering e criando matriz esparsa...",
-  "model_training": "Treinando o modelo KNN...",
   "recommendation_for": "Recomendações para o usuário",
   "movie_title": "Título do Filme",
   "predicted_rating": "Nota Predita",
-  "error_user_not_found": "ID de usuário {user_id} não encontrado no banco de dados."
+  "error_user_not_found": "ID de usuário {user_id} não encontrado no banco de dados.",
+  "creating_matrix": "Construindo matriz usuário-item...",
+  "matrix_info": "Matriz criada com {users} usuários e {movies} filmes.",
+  "sparsity_info": "Esparsidade da matriz: {sparsity:.2f}%",
+  "model_training": "Treinando modelo KNN (métrica: {metric})...",
+  "finding_neighbors": "Buscando vizinhos para o usuário {user_id}...",
+  "neighbors_found": "Encontrados {count} vizinhos similares."
 }
