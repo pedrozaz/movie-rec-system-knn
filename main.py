@@ -1,45 +1,1 @@
-import numpy as np
-
-from src.utils.translator import Translator
-from src.preprocessing.data_loader import load_movielens_100k
-from src.preprocessing.matrix_builder import create_user_item_matrix
-from src.models.knn_recommender import KNNRecommender
-from sklearn.model_selection import train_test_split
-from src.models.evaluator import Evaluator
-
-
-def main():
-    tr = Translator(lang='pt')
-
-    df_ratings, df_items = load_movielens_100k()
-
-    train_df, test_df = train_test_split(df_ratings, test_size=0.2, random_state=42)
-
-    sparse_mat, matrix_df, user_means = create_user_item_matrix(train_df)
-
-    recommender = KNNRecommender(n_neighbors=20)
-    recommender.fit(sparse_mat)
-
-    user_id = test_df['user_id'].iloc[0]
-    user_idx = user_id - 1
-
-    user_test_data = test_df[test_df['user_id'] == user_id]
-    actual_ids = user_test_data['movie_id'].values
-    actual_ratings = user_test_data['rating'].values
-
-    predictions = recommender.recommend(user_idx, matrix_df, user_means, n_recs=1682)
-
-    y_true = []
-    y_pred = []
-
-    for m_id, r_real in zip(actual_ids, actual_ratings):
-        if m_id in predictions.index:
-            y_true.append(r_real)
-            y_pred.append(predictions[m_id])
-
-        if y_true:
-            rmse_val = Evaluator.rmse(np.array(y_true), np.array(y_pred))
-            print(f"\nRMSE for User {user_id}: {rmse_val:.4f}")
-
-if __name__ == "__main__":
-    main()
+from src.models.knn_recommender import KNNRecommenderfrom src.preprocessing.data_loader import load_movielens_100kfrom src.preprocessing.matrix_builder import create_user_item_matrixfrom src.utils.translator import Translatordef main():    tr = Translator(lang='pt')    df_ratings, df_items = load_movielens_100k()    # USER_BASED TEST    print("\n--- User-Based ---")    sparse_user, df_user, means_user = create_user_item_matrix(df_ratings, is_item_based=False)    model_user = KNNRecommender(n_neighbors=20)    model_user.fit(sparse_user)    # ITEM_BASED TEST    print("\n--- Item-Based ---")    sparse_item, df_item, means_item = create_user_item_matrix(df_ratings, is_item_based=True)    model_item = KNNRecommender(n_neighbors=20)    model_item.fit(sparse_item)    # Quick test: movies alike toy story    toy_story_idx = 0    distances, indices = model_item.get_similar_users(toy_story_idx)    print("\nMovies similar with Toy Story (ID 1)")    for i in range(5):        movie_id = df_item.index[indices[i]]        title = df_items[df_items['movie_id'] == movie_id]['title'].values[0]        sim = 1 - distances[i]        print(f"- {title}: (Similarity: {sim:.4f})")if __name__ == "__main__":    main()
