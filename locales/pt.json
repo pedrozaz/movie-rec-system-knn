@@ -1,0 +1,10 @@
+{
+  "loading_data": "Carregando dataset...",
+  "data_info": "Dataset carregando com {rows} avaliações.",
+  "preprocessing": "Aplicando mean-centering e criando matriz esparsa...",
+  "model_training": "Treinando o modelo KNN...",
+  "recommendation_for": "Recomendações para o usuário",
+  "movie_title": "Título do Filme",
+  "predicted_rating": "Nota Predita",
+  "error_user_not_found": "ID de usuário {user_id} não encontrado no banco de dados."
+}
